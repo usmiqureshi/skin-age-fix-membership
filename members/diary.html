@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Daily Skin Diary · Skin Age Fix Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  .agebar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 30px 0 10px; }
+  .agebox { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; text-align: center; }
+  .agebox .n { font-family: var(--serif); font-size: 48px; line-height: 1; color: var(--dark); }
+  .agebox.cur .n { color: var(--gold-dark); }
+  .agebox .l { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); margin-top: 8px; }
+  .consist { font-size: 13px; color: var(--mid); margin-top: 6px; }
+
+  .metric { margin-bottom: 26px; }
+  .metric .mh { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .metric .swatch { width: 14px; height: 14px; border-radius: 3px; }
+  .metric .mname { font-family: var(--serif); font-size: 20px; }
+  .dots-row { display: flex; gap: 12px; }
+  .rdot { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: var(--white); cursor: pointer; font-family: var(--sans); color: var(--light); transition: all .15s; }
+  .rdot:hover { border-color: var(--gold); }
+  .rdot.on { color: var(--white); border-color: transparent; }
+  .note-field { width: 100%; font-family: var(--sans); font-size: 14px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); resize: vertical; }
+
+  .chart-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 22px; }
+  .chart-card h3 { font-size: 20px; margin-bottom: 4px; }
+  .chart-card .avg { font-size: 13px; color: var(--mid); margin-bottom: 14px; }
+  svg { width: 100%; height: 150px; display: block; }
+
+  .hist-row { display: grid; grid-template-columns: 110px repeat(3, 1fr) 2fr; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .hist-row.head { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--light); }
+  .pill { display: inline-block; min-width: 26px; text-align: center; border-radius: 20px; padding: 3px 8px; color: #fff; font-size: 13px; }
+  .setup { max-width: 480px; margin: 0 auto; }
+  .setup label { display: block; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--light); margin: 16px 0 6px; }
+  .setup input { width: 100%; font-family: var(--sans); font-size: 15px; padding: 13px; border: 1px solid var(--border); border-radius: var(--radius); }
+  @media (max-width: 700px) { .agebar { grid-template-columns: 1fr; } .hist-row { grid-template-columns: 90px repeat(3, 1fr); } .hist-row .hn { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/members/"><span class="nav-logo">Q</span><span class="nav-name">Skin Age Fix Membership</span></a>
+    <div class="nav-right"><span class="member-badge" data-member-name>Member</span><span class="nav-link" onclick="signOut()">Sign Out</span></div>
+  </div>
+</nav>
+
+<div class="page">
+<section class="bg-cream" style="padding:40px 0 70px">
+  <div class="wrap">
+    <a href="/members/" class="back-dash">← Dashboard</a>
+    <div class="page-head" style="padding-top:24px">
+      <span class="eyebrow">Benefit 10</span>
+      <h1>Daily Skin Diary</h1>
+      <p class="lead">Rate your skin each day. Watch hydration, clarity and firmness trend over 30 days — the data that proves your protocol is working.</p>
+    </div>
+
+    <!-- SETUP -->
+    <div id="setup" class="card setup hidden" style="margin-top:40px">
+      <h3 style="font-family:var(--serif);font-size:26px;text-align:center">Set up your diary</h3>
+      <p class="muted center" style="margin-bottom:10px">We'll seed 28 days of sample data so you can see your trends straight away.</p>
+      <label>Your name</label>
+      <input id="suName" type="text" placeholder="First name" />
+      <label>True age</label>
+      <input id="suTrue" type="number" min="16" max="100" placeholder="e.g. 42" />
+      <label>Starting skin age</label>
+      <input id="suSkin" type="number" min="16" max="110" placeholder="e.g. 49" />
+      <button class="btn btn-gold" id="suStart" style="width:100%;margin-top:24px">Start My Diary</button>
+    </div>
+
+    <!-- APP -->
+    <div id="app" class="hidden" style="margin-top:30px">
+      <div class="agebar">
+        <div class="agebox"><div class="n" id="ageTrue">–</div><div class="l">True Age</div></div>
+        <div class="agebox"><div class="n" id="ageStart">–</div><div class="l">Starting Skin Age</div></div>
+        <div class="agebox cur"><div class="n" id="ageCur">–</div><div class="l">Estimated Current</div></div>
+      </div>
+      <p class="consist center" id="consist"></p>
+
+      <div class="tabs" style="margin-top:30px">
+        <button class="tab active" data-tab="log">Log Today</button>
+        <button class="tab" data-tab="trends">Trends</button>
+        <button class="tab" data-tab="history">History</button>
+      </div>
+
+      <!-- LOG -->
+      <div id="tab-log">
+        <div class="card">
+          <p class="muted" id="logDate" style="margin-bottom:24px"></p>
+          <div class="metric">
+            <div class="mh"><span class="swatch" style="background:#4A90D9"></span><span class="mname">Hydration</span></div>
+            <div class="dots-row" data-metric="hydration"></div>
+          </div>
+          <div class="metric">
+            <div class="mh"><span class="swatch" style="background:var(--gold)"></span><span class="mname">Clarity</span></div>
+            <div class="dots-row" data-metric="clarity"></div>
+          </div>
+          <div class="metric">
+            <div class="mh"><span class="swatch" style="background:#5BA86E"></span><span class="mname">Firmness</span></div>
+            <div class="dots-row" data-metric="firmness"></div>
+          </div>
+          <label style="display:block;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--light);margin:8px 0 8px">Note (optional)</label>
+          <textarea class="note-field" id="note" rows="2" placeholder="Anything you noticed today…"></textarea>
+          <button class="btn btn-gold" id="saveLog" style="margin-top:20px">Save Today's Entry</button>
+          <span id="savedMsg" class="gold-text" style="margin-left:14px;font-size:13px"></span>
+        </div>
+      </div>
+
+      <!-- TRENDS -->
+      <div id="tab-trends" class="hidden">
+        <div class="chart-card"><h3>Hydration</h3><div class="avg" id="avgH"></div><svg id="chartH" viewBox="0 0 600 150" preserveAspectRatio="none"></svg></div>
+        <div class="chart-card"><h3>Clarity</h3><div class="avg" id="avgC"></div><svg id="chartC" viewBox="0 0 600 150" preserveAspectRatio="none"></svg></div>
+        <div class="chart-card"><h3>Firmness</h3><div class="avg" id="avgF"></div><svg id="chartF" viewBox="0 0 600 150" preserveAspectRatio="none"></svg></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div id="tab-history" class="hidden">
+        <div class="card">
+          <div class="hist-row head"><div>Date</div><div>Hyd</div><div>Clar</div><div>Firm</div><div class="hn">Note</div></div>
+          <div id="histBody"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/assets/js/members.js"></script>
+<script>
+document.addEventListener('saf:member-ready', function (e) {
+  var KEY = 'drq-diary-' + e.detail.email;
+  var COLORS = { hydration: '#4A90D9', clarity: '#C9A96E', firmness: '#5BA86E' };
+  var data = load();
+  var todayKey = dateKey(new Date());
+  var draft = { hydration: 0, clarity: 0, firmness: 0, note: '' };
+
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (x) { return null; } }
+  function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
+  function dateKey(d) { return d.toISOString().slice(0, 10); }
+  function fmt(k) { return new Date(k + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }); }
+
+  // ---- setup ----
+  if (!data) {
+    document.getElementById('setup').classList.remove('hidden');
+    document.getElementById('suName').value = e.detail.name || '';
+    document.getElementById('suStart').addEventListener('click', function () {
+      var name = document.getElementById('suName').value.trim() || e.detail.name;
+      var trueAge = parseInt(document.getElementById('suTrue').value, 10);
+      var skinAge = parseInt(document.getElementById('suSkin').value, 10);
+      if (!trueAge || !skinAge) { alert('Please enter your true age and starting skin age.'); return; }
+      data = { name: name, trueAge: trueAge, startSkinAge: skinAge, entries: seed() };
+      save();
+      document.getElementById('setup').classList.add('hidden');
+      boot();
+    });
+    return;
+  }
+  boot();
+
+  // 28 days of gently improving sample data
+  function seed() {
+    var entries = {}; var today = new Date();
+    for (var i = 28; i >= 1; i--) {
+      var d = new Date(today); d.setDate(d.getDate() - i);
+      var t = (28 - i) / 28; // 0..1 progress
+      function v(base) { return Math.max(1, Math.min(5, Math.round(base + t * 1.6 + (Math.random() - 0.5)))); }
+      entries[dateKey(d)] = { hydration: v(2.4), clarity: v(2.2), firmness: v(2.6), note: '' };
+    }
+    return entries;
+  }
+
+  function estimatedCurrent() {
+    var keys = Object.keys(data.entries).sort();
+    var recent = keys.slice(-7).map(function (k) { return data.entries[k]; });
+    if (!recent.length) return data.startSkinAge;
+    var avg = 0; recent.forEach(function (en) { avg += (en.hydration + en.clarity + en.firmness) / 3; });
+    avg = avg / recent.length; // 1..5
+    // higher scores => more skin age improvement (up to ~6 years)
+    var improvement = Math.round((avg - 2.5) * 2.2);
+    return Math.max(data.trueAge, data.startSkinAge - Math.max(0, improvement));
+  }
+
+  function consistency() {
+    var logged = Object.keys(data.entries).length;
+    return Math.min(100, Math.round((logged / 30) * 100));
+  }
+
+  function boot() {
+    document.getElementById('app').classList.remove('hidden');
+    document.getElementById('ageTrue').textContent = data.trueAge;
+    document.getElementById('ageStart').textContent = data.startSkinAge;
+    document.getElementById('ageCur').textContent = estimatedCurrent();
+    document.getElementById('consist').textContent = 'Consistency: ' + consistency() + '% · ' + Object.keys(data.entries).length + ' of 30 days logged';
+    document.getElementById('logDate').textContent = 'Logging for ' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+
+    if (data.entries[todayKey]) draft = Object.assign({}, data.entries[todayKey]);
+    document.getElementById('note').value = draft.note || '';
+    buildDots();
+    renderTabs();
+  }
+
+  // rating dots
+  function buildDots() {
+    document.querySelectorAll('.dots-row').forEach(function (row) {
+      var metric = row.dataset.metric;
+      row.innerHTML = '';
+      for (var i = 1; i <= 5; i++) {
+        (function (n) {
+          var b = document.createElement('button');
+          b.className = 'rdot'; b.textContent = n;
+          if (draft[metric] >= n) { b.classList.add('on'); b.style.background = COLORS[metric]; }
+          b.addEventListener('click', function () {
+            draft[metric] = n;
+            buildDots();
+          });
+          row.appendChild(b);
+        })(i);
+      }
+    });
+  }
+
+  document.getElementById('saveLog').addEventListener('click', function () {
+    if (!draft.hydration || !draft.clarity || !draft.firmness) { alert('Please rate all three metrics.'); return; }
+    draft.note = document.getElementById('note').value.trim();
+    data.entries[todayKey] = Object.assign({}, draft);
+    save();
+    document.getElementById('savedMsg').textContent = '✓ Saved';
+    setTimeout(function () { document.getElementById('savedMsg').textContent = ''; }, 2500);
+    boot();
+  });
+
+  // tabs
+  document.querySelectorAll('.tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      ['log', 'trends', 'history'].forEach(function (id) {
+        document.getElementById('tab-' + id).classList.toggle('hidden', id !== tab.dataset.tab);
+      });
+    });
+  });
+
+  function renderTabs() { renderTrends(); renderHistory(); }
+
+  function lineChart(svg, metric, color) {
+    var keys = Object.keys(data.entries).sort().slice(-30);
+    var pts = keys.map(function (k, i) { return { x: i, y: data.entries[k][metric] }; });
+    if (!pts.length) { svg.innerHTML = ''; return 0; }
+    var W = 600, H = 150, pad = 14;
+    var stepX = pts.length > 1 ? (W - pad * 2) / (pts.length - 1) : 0;
+    function px(i) { return pad + i * stepX; }
+    function py(v) { return H - pad - ((v - 1) / 4) * (H - pad * 2); }
+    var d = pts.map(function (p, i) { return (i === 0 ? 'M' : 'L') + px(i).toFixed(1) + ' ' + py(p.y).toFixed(1); }).join(' ');
+    var area = d + ' L' + px(pts.length - 1).toFixed(1) + ' ' + (H - pad) + ' L' + px(0).toFixed(1) + ' ' + (H - pad) + ' Z';
+    var dotsSvg = pts.map(function (p, i) { return '<circle cx="' + px(i).toFixed(1) + '" cy="' + py(p.y).toFixed(1) + '" r="2.5" fill="' + color + '"/>'; }).join('');
+    svg.innerHTML =
+      '<path d="' + area + '" fill="' + color + '" opacity="0.08"/>' +
+      '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2" vector-effect="non-scaling-stroke"/>' + dotsSvg;
+    var avg = pts.reduce(function (s, p) { return s + p.y; }, 0) / pts.length;
+    return avg;
+  }
+
+  function renderTrends() {
+    document.getElementById('avgH').textContent = '30-day average: ' + lineChart(document.getElementById('chartH'), 'hydration', COLORS.hydration).toFixed(1) + ' / 5';
+    document.getElementById('avgC').textContent = '30-day average: ' + lineChart(document.getElementById('chartC'), 'clarity', COLORS.clarity).toFixed(1) + ' / 5';
+    document.getElementById('avgF').textContent = '30-day average: ' + lineChart(document.getElementById('chartF'), 'firmness', COLORS.firmness).toFixed(1) + ' / 5';
+  }
+
+  function pill(v, color) { return '<span class="pill" style="background:' + color + '">' + v + '</span>'; }
+
+  function renderHistory() {
+    var keys = Object.keys(data.entries).sort().reverse();
+    document.getElementById('histBody').innerHTML = keys.map(function (k) {
+      var en = data.entries[k];
+      return '<div class="hist-row"><div>' + fmt(k) + '</div>' +
+        '<div>' + pill(en.hydration, COLORS.hydration) + '</div>' +
+        '<div>' + pill(en.clarity, COLORS.clarity) + '</div>' +
+        '<div>' + pill(en.firmness, COLORS.firmness) + '</div>' +
+        '<div class="hn muted" style="font-size:13px">' + (en.note ? en.note.replace(/</g, '&lt;') : '—') + '</div></div>';
+    }).join('') || '<p class="muted">No entries yet.</p>';
+  }
+});
+</script>
+</body>
+</html>

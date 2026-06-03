@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Members Dashboard · Skin Age Fix Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  .welcome { padding: 56px 0 30px; }
+  .welcome h1 { font-size: 46px; margin: 14px 0 6px; }
+  .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  .bcard {
+    display: block; text-decoration: none; background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 30px; transition: all 0.22s ease; position: relative;
+  }
+  .bcard:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .bnum {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--gold-bg); border: 1px solid var(--border);
+    color: var(--gold-dark); font-family: var(--serif); font-size: 18px;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+  }
+  .bcard h3 { font-size: 24px; margin-bottom: 8px; }
+  .bcard p { color: var(--mid); font-size: 14px; margin-bottom: 16px; }
+  .bcard .open { font-family: var(--sans); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); }
+  .manage { max-width: 560px; margin: 0 auto; }
+  .manage h3 { font-size: 26px; margin-bottom: 6px; }
+  .manage .plan { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid var(--border); margin-bottom: 22px; }
+  .manage .plan .amt { font-family: var(--serif); font-size: 28px; }
+  .manage .plan .status { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #2E8B57; }
+  #cancelMsg { margin-top: 16px; }
+  @media (max-width: 760px) { .dash-grid { grid-template-columns: 1fr; } .welcome h1 { font-size: 34px; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/members/">
+      <span class="nav-logo">Q</span>
+      <span class="nav-name">Skin Age Fix Membership</span>
+    </a>
+    <div class="nav-right">
+      <span class="member-badge" data-member-name>Member</span>
+      <span class="nav-link" onclick="signOut()">Sign Out</span>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+<section class="welcome bg-cream">
+  <div class="wrap">
+    <span class="eyebrow">Skin Age Fix Membership · Active</span>
+    <h1>Welcome back, <span data-member-name>Member</span></h1>
+    <p class="muted">Your ten clinical benefits are ready below.</p>
+  </div>
+</section>
+
+<section class="bg-cream" style="padding-top:20px">
+  <div class="wrap">
+    <div class="dash-grid">
+      <a class="bcard" href="/members/drq.html">
+        <div class="bnum">01</div><h3>Dr Q AI Skin Concierge</h3>
+        <p>24/7 clinical skin guidance, powered by Dr Q's clinical knowledge.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/newsletter.html">
+        <div class="bnum">02</div><h3>Skin Intelligence Newsletter</h3>
+        <p>The 52-week clinical newsletter library, one lesson at a time.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/reassessment.html">
+        <div class="bnum">03</div><h3>Quarterly Skin Age Reassessment</h3>
+        <p>Recalculate your skin age every 90 days and track the gap closing.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/dupe.html">
+        <div class="bnum">04</div><h3>Monthly Dupe Destroyer</h3>
+        <p>The clinical truth behind luxury skincare — and what to buy instead.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/product.html">
+        <div class="bnum">05</div><h3>Discounted Product of the Month</h3>
+        <p>A clinically selected cosmeceutical at 20–25% off via GetHarley.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/protocol.html">
+        <div class="bnum">06</div><h3>Monthly Protocol Update</h3>
+        <p>One precise routine adjustment for the season, every month.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/report.html">
+        <div class="bnum">07</div><h3>Quarterly Skin Intelligence Report</h3>
+        <p>A personalised, printable clinical report every 90 days.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/community.html">
+        <div class="bnum">08</div><h3>Inner Circle WhatsApp</h3>
+        <p>Your private member community and weekly clinical drops.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/mythbuster.html">
+        <div class="bnum">09</div><h3>Fortnightly Myth Buster</h3>
+        <p>26 clinical realities that dismantle the most stubborn skincare myths.</p><span class="open">Open →</span>
+      </a>
+      <a class="bcard" href="/members/diary.html">
+        <div class="bnum">10</div><h3>Daily Skin Diary</h3>
+        <p>Log hydration, clarity and firmness daily — watch 30-day trends build.</p><span class="open">Open →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white">
+  <div class="wrap">
+    <div class="manage card">
+      <h3>Membership</h3>
+      <p class="muted">Manage your £9/month Skin Age Fix Membership.</p>
+      <div class="plan">
+        <div><div class="amt">£9<span style="font-size:14px;color:var(--light)"> / month</span></div></div>
+        <div class="status">● Active</div>
+      </div>
+      <button class="btn btn-outline" id="cancelBtn">Cancel Subscription</button>
+      <p class="muted" style="font-size:13px;margin-top:14px">Cancellation takes effect at the end of your current billing period. You keep full access until then.</p>
+      <div id="cancelMsg" class="notice hidden"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/assets/js/members.js"></script>
+<script>
+(function () {
+  var btn = document.getElementById('cancelBtn');
+  var msg = document.getElementById('cancelMsg');
+  function show(text, ok) {
+    msg.textContent = text;
+    msg.classList.remove('hidden');
+    msg.style.borderLeftColor = ok === false ? '#C0392B' : 'var(--gold)';
+  }
+  btn.addEventListener('click', function () {
+    if (!confirm('Cancel your membership at the end of the current billing period?')) return;
+    btn.disabled = true;
+    show('Processing your cancellation…');
+    window.authedFetch('/api/cancel-subscription', { method: 'POST' })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (res.ok && res.d.cancelled) {
+          var when = res.d.current_period_end ? new Date(res.d.current_period_end * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'the end of your billing period';
+          show('Your membership is set to cancel on ' + when + '. You keep full access until then.');
+        } else {
+          show(res.d.error || 'Could not cancel right now. Please contact support.', false);
+          btn.disabled = false;
+        }
+      })
+      .catch(function () { show('Network error. Please try again.', false); btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

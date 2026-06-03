@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Monthly Dupe Destroyer · Skin Age Fix Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  .dupe { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .dupe-head { background: var(--dark); color: var(--white); padding: 32px 36px; }
+  .dupe-head .m { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+  .dupe-head h2 { color: #fff; font-size: 34px; margin: 8px 0 4px; }
+  .dupe-head .rrp { font-size: 15px; color: rgba(255,255,255,.7); }
+  .dupe-body { padding: 36px; }
+  .dupe-body h3 { font-size: 20px; margin: 0 0 10px; }
+  .dupe-body p { color: var(--mid); font-size: 16px; margin-bottom: 22px; line-height: 1.6; }
+  .costbox { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+  .costbox .c { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 22px; }
+  .costbox .c .k { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); }
+  .costbox .c .v { font-family: var(--serif); font-size: 26px; }
+  .needs { background: var(--gold-bg); border-left: 3px solid var(--gold); padding: 22px; border-radius: var(--radius); }
+  .needs .k { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; }
+  .needs p { margin: 0; font-family: var(--serif); font-size: 18px; color: var(--dark); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/members/"><span class="nav-logo">Q</span><span class="nav-name">Skin Age Fix Membership</span></a>
+    <div class="nav-right"><span class="member-badge" data-member-name>Member</span><span class="nav-link" onclick="signOut()">Sign Out</span></div>
+  </div>
+</nav>
+
+<div class="page">
+<section class="bg-cream" style="padding:40px 0 80px">
+  <div class="wrap">
+    <a href="/members/" class="back-dash">← Dashboard</a>
+    <div class="page-head" style="padding-top:24px">
+      <span class="eyebrow">Benefit 04</span>
+      <h1>Monthly Dupe Destroyer</h1>
+      <p class="lead">A clinical exposé of one luxury skincare product each month — what it really costs to make, what the actives actually do, and what your skin needs instead.</p>
+    </div>
+
+    <div class="chip-row" id="months" style="margin-top:34px"></div>
+    <div class="dupe" id="dupe"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/assets/js/members.js"></script>
+<script>
+(function () {
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var DATA = [
+    { brand: 'La Mer', product: 'Crème de la Mer', rrp: '£340', cost: '£3–8', body: 'The primary moisturising agent is mineral oil and glycerin — effective basic moisturisers present in £5 products. There is no peer-reviewed clinical evidence for the much-marketed Miracle Broth.', needs: 'A clinical ceramide moisturiser at £25–60, or a retinoid at therapeutic concentration if you want genuine biological change.' },
+    { brand: 'Charlotte Tilbury', product: 'Magic Cream', rrp: '£95', cost: '£4–8', body: 'The instant luminosity comes from silicone — dimethicone and cyclomethicone — sitting on the surface. It contains fragrance, a known sensitising ingredient, and the effect disappears on washing.', needs: 'A multi-weight hyaluronic acid serum at £30–50 for hydration that builds rather than simply coats.' },
+    { brand: 'Estée Lauder', product: 'Advanced Night Repair', rrp: '£79', cost: '£5–12', body: 'The hero active is hyaluronic acid — genuinely effective — plus bifida ferment lysate, which has some evidence for barrier support. But there is no active here capable of stimulating collagen synthesis.', needs: 'A cosmeceutical serum with retinoids or niacinamide at 10% to actually rebuild rather than maintain.' },
+    { brand: 'Sisley', product: 'Black Rose Cream Mask', rrp: '£130', cost: '£15–25', body: 'Rose hip oil provides some antioxidant activity, but there is no active at therapeutic concentration for collagen, cell renewal or pigmentation. Better formulated than most luxury — still cosmetic-grade.', needs: 'The same philosophy applied at cosmeceutical concentrations: antioxidants and actives that cross the efficacy threshold.' },
+    { brand: 'Clarins', product: 'Double Serum', rrp: '£68', cost: '£8–14', body: 'The two-phase delivery system is genuinely innovative. The problem is the payload: plant antioxidants sit below the threshold required for measurable biological change.', needs: 'The delivery concept is sound — applied to cosmeceutical-grade actives it would be effective. Choose a serum that pairs smart delivery with proven concentrations.' },
+    { brand: 'La Prairie', product: 'Skin Caviar', rrp: '£450+', cost: '£30–60', body: 'Caviar extract is a protein-rich conditioning ingredient. There is no published evidence for collagen production at topical concentrations.', needs: 'At £450, the cost-to-clinical-benefit ratio is the most unfavourable on this entire list. Almost any cosmeceutical protocol outperforms it.' },
+    { brand: 'Elemis', product: 'Pro-Collagen Marine Cream', rrp: '£95', cost: '£10–18', body: 'Padina pavonica may mildly slow surface collagen degradation — which is not the same as building new collagen. The name promises more than the biology delivers.', needs: 'A retinoid for genuine fibroblast activation and new collagen synthesis.' },
+    { brand: 'SK-II', product: 'Facial Treatment Essence', rrp: '£200+', cost: '£8–20', body: 'Pitera (galactomyces ferment) improves surface quality and hydration. It does not produce collagen synthesis or reverse structural ageing.', needs: 'Niacinamide at 10% produces superior, broader results at a fraction of the cost.' },
+    { brand: 'Augustinus Bader', product: 'The Rich Cream', rrp: '£245', cost: '£40–80', body: 'The most clinically credible luxury brand on this list. TFC8 has genuine (brand-funded) clinical studies, though effect sizes are modest versus dedicated cosmeceutical actives.', needs: 'The positioning is honest — the price is not justified versus a correctly prescribed cosmeceutical protocol delivering larger effect sizes.' },
+    { brand: 'Drunk Elephant', product: 'Protini Polypeptide Cream', rrp: '£62', cost: '£12–20', body: 'Signal peptides are present — acetyl hexapeptide-3 and copper tripeptide-1 — but likely below therapeutic concentration to drive meaningful collagen response.', needs: 'A cosmeceutical multi-peptide serum with Matrixyl 3000 at 3% minimum.' },
+    { brand: 'Tatcha', product: 'The Dewy Skin Cream', rrp: '£62', cost: '£10–18', body: 'Hadasei-3 (green tea, rice, algae) is an antioxidant blend with mild inflammation reduction and a beautiful texture. It cannot stimulate collagen or address structural ageing.', needs: 'The antioxidant approach is valid — at cosmeceutical concentrations, paired with an active that addresses your primary driver.' },
+    { brand: 'SPF Moisturisers', product: 'SPF + Moisturiser Hybrids', rrp: 'Various', cost: '—', body: 'Combining SPF and moisturiser in one product means both functions are diluted. Most people apply around 20% of the required SPF amount. At 0.3mg/cm² application, an SPF30 hybrid provides approximately SPF4 of real-world protection.', needs: 'A separate, dedicated SPF50 applied as the final step of your morning routine — never relying on a hybrid for sun protection.' }
+  ];
+
+  var chips = document.getElementById('months');
+  var box = document.getElementById('dupe');
+  var current = new Date().getMonth();
+
+  function chipsHtml() {
+    chips.innerHTML = MONTHS.map(function (m, i) {
+      return '<button class="chip' + (i === current ? ' active' : '') + '" data-i="' + i + '">' + m.slice(0, 3) + '</button>';
+    }).join('');
+  }
+
+  function render(i) {
+    var d = DATA[i];
+    box.innerHTML =
+      '<div class="dupe-head"><div class="m">' + MONTHS[i] + ' · Dupe Destroyer</div>' +
+      '<h2>' + d.brand + ' — ' + d.product + '</h2><div class="rrp">RRP ' + d.rrp + '</div></div>' +
+      '<div class="dupe-body">' +
+        '<h3>The clinical breakdown</h3><p>' + d.body + '</p>' +
+        '<div class="costbox"><div class="c"><div class="k">Retail price</div><div class="v">' + d.rrp + '</div></div>' +
+        '<div class="c"><div class="k">Estimated cost to make</div><div class="v">' + d.cost + '</div></div></div>' +
+        '<div class="needs"><div class="k">What your skin needs instead</div><p>' + d.needs + '</p></div>' +
+      '</div>';
+  }
+
+  chips.addEventListener('click', function (e) {
+    if (!e.target.classList.contains('chip')) return;
+    current = +e.target.dataset.i;
+    chipsHtml(); render(current);
+  });
+
+  chipsHtml(); render(current);
+})();
+</script>
+</body>
+</html>

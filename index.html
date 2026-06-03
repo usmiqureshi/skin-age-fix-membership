@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skin Age Fix Membership · Luxe Skin Concierge</title>
+<meta name="description" content="The doctor-led clinical skincare membership that closes the gap between your skin age and your real age. £9/month. No contract." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  /* page-specific */
+  .hero { padding: 150px 0 96px; text-align: center; }
+  .hero h1 { font-size: 60px; max-width: 880px; margin: 18px auto 22px; font-weight: 300; }
+  .hero .sub { font-size: 20px; color: var(--mid); max-width: 600px; margin: 0 auto 36px; }
+  .hero .price { font-family: var(--serif); font-size: 84px; color: var(--gold-dark); line-height: 1; }
+  .hero .price small { font-family: var(--sans); font-size: 16px; color: var(--light); letter-spacing: 1px; }
+  .hero .ticks { margin-top: 22px; font-size: 13px; letter-spacing: 1px; color: var(--mid); }
+  .hero .ticks span { margin: 0 10px; }
+
+  .join-box { max-width: 440px; margin: 30px auto 0; }
+  .join-box input {
+    width: 100%; font-family: var(--sans); font-size: 15px; padding: 16px 18px;
+    border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); margin-bottom: 12px;
+  }
+  .join-box input:focus { outline: none; border-color: var(--gold); }
+  .join-box .btn { width: 100%; }
+  #joinMsg { font-size: 13px; margin-top: 12px; min-height: 18px; }
+
+  .login-card { max-width: 460px; margin: 0 auto; text-align: center; }
+  .login-card h2 { font-size: 30px; margin-bottom: 8px; }
+  .login-card p { color: var(--mid); margin-bottom: 24px; }
+  #memberAlert { margin-top: 18px; }
+
+  .value-list { max-width: 720px; margin: 0 auto; }
+  .value-row { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .value-row .name { font-family: var(--serif); font-size: 21px; }
+  .value-row .name::before { content: '✦'; color: var(--gold); margin-right: 12px; font-size: 14px; }
+  .value-row .val { font-family: var(--sans); font-size: 14px; color: var(--light); white-space: nowrap; }
+  .value-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 28px; padding-top: 22px; }
+  .value-total .t1 { font-family: var(--serif); font-size: 26px; }
+  .value-total .t1 small { display: block; font-family: var(--sans); font-size: 12px; letter-spacing: 1px; color: var(--light); text-transform: uppercase; }
+  .value-total .your { text-align: right; }
+  .value-total .your .p { font-family: var(--serif); font-size: 52px; color: var(--gold-dark); line-height: 1; }
+
+  .tcards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .tcard { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; }
+  .tcard .stars { color: var(--gold); letter-spacing: 3px; margin-bottom: 14px; }
+  .tcard p { font-family: var(--serif); font-size: 19px; color: var(--dark); line-height: 1.45; }
+  .tcard .who { font-family: var(--sans); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); margin-top: 18px; }
+
+  @media (max-width: 860px) { .tcards { grid-template-columns: 1fr; } .hero h1 { font-size: 40px; } .hero .price { font-size: 64px; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/">
+      <span class="nav-logo">Q</span>
+      <span class="nav-name">Skin Age Fix Membership</span>
+    </a>
+    <div class="nav-right">
+      <span id="navBadge" class="member-badge hidden">Member</span>
+      <a href="#join" class="btn btn-gold" style="padding:11px 22px;font-size:11px">Join for £9/month</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- HERO -->
+<section class="hero dots bg-cream" id="top">
+  <div class="wrap">
+    <span class="eyebrow">Doctor-led clinical skincare membership</span>
+    <h1>Your skin is ageing faster than it should. We can fix that.</h1>
+    <p class="sub">The clinical membership that closes the gap between your skin age and your real age.</p>
+    <div class="price">£9<small> / month</small></div>
+    <div class="join-box" id="join">
+      <input type="email" id="joinEmail" placeholder="Enter your email to begin" autocomplete="email" />
+      <button class="btn btn-gold" id="joinBtn">Start My Membership</button>
+      <div id="joinMsg"></div>
+    </div>
+    <div class="ticks">
+      <span>✓ No contract</span>·<span>✓ Cancel any time</span>·<span>✓ Immediate access</span>
+    </div>
+  </div>
+</section>
+
+<!-- MEMBER LOGIN -->
+<section class="bg-white">
+  <div class="wrap">
+    <div class="login-card card">
+      <h2>Already a member? Sign in.</h2>
+      <p>Access your members area, Dr Q AI and all ten clinical benefits.</p>
+      <button class="btn btn-dark" id="loginBtn">Member Sign In</button>
+      <div id="memberAlert" class="notice hidden"></div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE STACK -->
+<section class="bg-cream">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">What's included</span>
+      <h2>Ten clinical benefits. One membership.</h2>
+      <p>Everything below is included in your £9/month membership — a fraction of what each element is worth individually.</p>
+    </div>
+    <div class="value-list">
+      <div class="value-row"><span class="name">Dr Q AI Skin Concierge</span><span class="val">worth £80/mo</span></div>
+      <div class="value-row"><span class="name">Skin Intelligence Newsletter</span><span class="val">worth £15/mo</span></div>
+      <div class="value-row"><span class="name">Quarterly Skin Age Reassessment</span><span class="val">worth £25/mo</span></div>
+      <div class="value-row"><span class="name">Monthly Dupe Destroyer</span><span class="val">worth £15/mo</span></div>
+      <div class="value-row"><span class="name">Discounted Product of the Month</span><span class="val">worth £20/mo</span></div>
+      <div class="value-row"><span class="name">Monthly Protocol Update</span><span class="val">worth £20/mo</span></div>
+      <div class="value-row"><span class="name">Quarterly Skin Intelligence Report</span><span class="val">worth £30/mo</span></div>
+      <div class="value-row"><span class="name">Inner Circle WhatsApp</span><span class="val">worth £10/mo</span></div>
+      <div class="value-row"><span class="name">Fortnightly Myth Buster</span><span class="val">worth £10/mo</span></div>
+      <div class="value-row"><span class="name">Daily Skin Diary</span><span class="val">worth £5/mo</span></div>
+      <div class="value-total">
+        <div class="t1">£230<small>Total value / month</small></div>
+        <div class="your"><div class="p">£9</div><small style="letter-spacing:1px;color:var(--light);text-transform:uppercase;font-size:12px">Your price / month</small></div>
+      </div>
+      <div class="center" style="margin-top:34px"><a href="#join" class="btn btn-gold">Start My Membership</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="bg-cream2">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Member results</span>
+      <h2>Clinical results. No filter required.</h2>
+    </div>
+    <div class="tcards">
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p>"My skin age dropped six years in three months. For the first time I understand what my skin actually needs — not what a brand is selling."</p>
+        <div class="who">Sarah · Member since launch</div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p>"Dr Q has saved me hundreds. I almost bought a £340 cream — the Dupe Destroyer talked me out of it and gave me what actually works."</p>
+        <div class="who">Priya · London</div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p>"The monthly protocol updates are genius. Every month I know exactly what to adjust. My barrier has never been stronger."</p>
+        <div class="who">Helen · Manchester</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+
+</div>
+
+<!-- Netlify Identity widget -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var alertBox = document.getElementById('memberAlert');
+  var navBadge = document.getElementById('navBadge');
+
+  function showAlert(html, kind) {
+    alertBox.innerHTML = html;
+    alertBox.classList.remove('hidden');
+    alertBox.style.borderLeftColor = kind === 'error' ? '#C0392B' : 'var(--gold)';
+  }
+
+  function hasRole(user) {
+    return !!(user && user.app_metadata && (user.app_metadata.roles || []).indexOf('active-member') !== -1);
+  }
+
+  function handleUser(user) {
+    if (!user) return;
+    navBadge.classList.remove('hidden');
+    if (hasRole(user)) {
+      navBadge.textContent = 'Active member';
+      window.location.href = '/members/';
+    } else {
+      navBadge.textContent = 'Signed in';
+      showAlert('Your membership is not active. Complete your £9/month membership to unlock the members area.<br><a href="#join" style="color:var(--gold-dark);font-weight:500">Activate my membership →</a>', 'error');
+    }
+  }
+
+  if (window.netlifyIdentity) {
+    netlifyIdentity.on('init', function (user) { if (user) handleUser(user); });
+    netlifyIdentity.on('login', function (user) { netlifyIdentity.close(); handleUser(user); });
+    netlifyIdentity.init();
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', function () {
+    if (window.netlifyIdentity) netlifyIdentity.open('login');
+  });
+
+  // Contextual banners from redirects
+  if (params.get('login') === 'required') {
+    showAlert('Please sign in to access the members area.');
+  }
+  if (params.get('cancelled') === 'true') {
+    showAlert('Checkout cancelled — no charge was made. You can start your membership any time.');
+  }
+
+  // --- Join flow ---------------------------------------------------------
+  var joinBtn = document.getElementById('joinBtn');
+  var joinEmail = document.getElementById('joinEmail');
+  var joinMsg = document.getElementById('joinMsg');
+
+  function setMsg(text, kind) {
+    joinMsg.textContent = text;
+    joinMsg.style.color = kind === 'error' ? '#C0392B' : 'var(--gold-dark)';
+  }
+
+  joinBtn.addEventListener('click', function () {
+    var email = (joinEmail.value || '').trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      setMsg('Please enter a valid email address.', 'error');
+      joinEmail.focus();
+      return;
+    }
+    joinBtn.disabled = true;
+    setMsg('Preparing your secure checkout…');
+    fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (res.ok && res.d.url) {
+          window.location.href = res.d.url;
+        } else {
+          setMsg(res.d.error || 'Could not start checkout. Please try again.', 'error');
+          joinBtn.disabled = false;
+        }
+      })
+      .catch(function () {
+        setMsg('Network error. Please try again.', 'error');
+        joinBtn.disabled = false;
+      });
+  });
+
+  joinEmail.addEventListener('keydown', function (e) { if (e.key === 'Enter') joinBtn.click(); });
+})();
+</script>
+</body>
+</html>

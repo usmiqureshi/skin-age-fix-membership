@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Monthly Protocol Update · Skin Age Fix Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  .proto { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; }
+  .proto .m { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); }
+  .proto h2 { font-size: 34px; margin: 10px 0 24px; color: var(--gold-dark); }
+  .proto .sect { margin-bottom: 24px; }
+  .proto .sect .k { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); margin-bottom: 6px; }
+  .proto .sect p { font-size: 17px; color: var(--mid); line-height: 1.6; }
+  .proto .expected { background: var(--gold-bg); border-left: 3px solid var(--gold); padding: 20px 22px; border-radius: var(--radius); }
+  .proto .expected .k { color: var(--gold-dark); }
+  .proto .expected p { color: var(--dark); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/members/"><span class="nav-logo">Q</span><span class="nav-name">Skin Age Fix Membership</span></a>
+    <div class="nav-right"><span class="member-badge" data-member-name>Member</span><span class="nav-link" onclick="signOut()">Sign Out</span></div>
+  </div>
+</nav>
+
+<div class="page">
+<section class="bg-cream" style="padding:40px 0 80px">
+  <div class="wrap">
+    <a href="/members/" class="back-dash">← Dashboard</a>
+    <div class="page-head" style="padding-top:24px">
+      <span class="eyebrow">Benefit 06</span>
+      <h1>Monthly Protocol Update</h1>
+      <p class="lead">One precise, clinically reasoned adjustment to your routine every month — timed to the season and built to compound your results across the year.</p>
+    </div>
+
+    <div class="chip-row" id="months" style="margin-top:34px"></div>
+    <div class="proto" id="proto"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/assets/js/members.js"></script>
+<script>
+(function () {
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var DATA = [
+    { action: 'Introduce a dedicated ceramide serum into your evening routine.', rationale: 'January skin is at its most barrier-depleted after central heating and cold air. A ceramide serum restores the structural lipids your barrier has lost.', expected: '7 days: reduced tightness. 3 weeks: improved hydration. 4 weeks: better tolerance of actives.' },
+    { action: 'Switch your morning cleanse to plain lukewarm water only — no cleanser.', rationale: 'Every morning cleanse strips the lipids your barrier repaired overnight. Stop interrupting the repair process.', expected: '5 days: reduced tightness. 2 weeks: improved moisturiser absorption.' },
+    { action: 'Introduce a weekly AHA exfoliation step on Sunday evenings.', rationale: 'The UV index is rising. Accelerate cell renewal now so treatment actives penetrate more efficiently through the spring.', expected: '2 weeks: improved absorption. 4 weeks: better texture and brightness.' },
+    { action: 'Add a dedicated SPF50 as the final step of your morning routine.', rationale: 'April UV index rises significantly. Every skin age improvement you have made is vulnerable without SPF protection.', expected: 'Immediate: protection of all skin age progress to date.' },
+    { action: 'Add a multi-weight hyaluronic acid serum as your first treatment step, on slightly damp skin.', rationale: 'May is the optimal month for hyaluronic acid — it locks in atmospheric moisture rather than drawing from deeper layers.', expected: '3 days: increased plumpness. 2 weeks: improved radiance.' },
+    { action: 'Progress your retinoid to nightly use, if you have used it every other night for 8+ weeks without irritation.', rationale: 'UV protection is now established and your barrier is in a summer-strengthened state — optimal conditions for retinoid progression.', expected: '4 weeks: accelerated cell turnover. 8 weeks: measurable collagen stimulation.' },
+    { action: 'Add a topical antioxidant serum to your morning routine, before SPF.', rationale: 'Peak UV. Antioxidants neutralise the free radicals that SPF alone cannot block.', expected: '4 weeks: reduced redness. 8 weeks: improved radiance.' },
+    { action: 'Reapply SPF at midday — set a 12pm phone reminder every day.', rationale: 'SPF degrades over 2–4 hours. Midday reapplication doubles your protection across a full summer day.', expected: 'Over the month: significantly reduced UV-driven pigmentation.' },
+    { action: 'Introduce a niacinamide serum at 10% as a dedicated evening treatment step.', rationale: 'A transition month — niacinamide addresses summer pigmentation, texture and barrier function simultaneously.', expected: '2 weeks: reduced post-summer marks. 4 weeks: improved barrier resilience.' },
+    { action: 'Add an occlusive layer as the final evening step — squalane, petrolatum or an overnight barrier cream.', rationale: 'Central heating season begins. Seal everything beneath it to prevent overnight moisture loss.', expected: '1 week: reduced morning tightness. 4 weeks: improved overnight hydration retention.' },
+    { action: 'Begin autumn retinoid progression — increase concentration if stable for 3+ months.', rationale: 'Low UV reduces photosensitivity risk, making this the best month to step up your retinoid concentration.', expected: '4 weeks: accelerated cell renewal. 8 weeks: collagen stimulation.' },
+    { action: 'Photograph your skin in consistent natural light and compare with your January baseline.', rationale: 'The close of your first annual protocol cycle. Measure objectively — not how your skin feels, but what photographs show.', expected: 'Document the gap you have closed across the year.' }
+  ];
+
+  var chips = document.getElementById('months');
+  var box = document.getElementById('proto');
+  var current = new Date().getMonth();
+
+  function chipsHtml() {
+    chips.innerHTML = MONTHS.map(function (m, i) {
+      return '<button class="chip' + (i === current ? ' active' : '') + '" data-i="' + i + '">' + m.slice(0, 3) + '</button>';
+    }).join('');
+  }
+  function render(i) {
+    var d = DATA[i];
+    box.innerHTML =
+      '<div class="m">' + MONTHS[i] + ' · Protocol Update</div>' +
+      '<h2>' + d.action + '</h2>' +
+      '<div class="sect"><div class="k">Clinical rationale</div><p>' + d.rationale + '</p></div>' +
+      '<div class="expected"><div class="k">Expected results</div><p>' + d.expected + '</p></div>';
+  }
+  chips.addEventListener('click', function (e) {
+    if (!e.target.classList.contains('chip')) return;
+    current = +e.target.dataset.i; chipsHtml(); render(current);
+  });
+  chipsHtml(); render(current);
+})();
+</script>
+</body>
+</html>
