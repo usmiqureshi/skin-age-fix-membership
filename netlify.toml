@@ -1,0 +1,24 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Friendly API alias -> Netlify Functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Members area: allow through to the static files only for active members.
+# Netlify Identity injects the user's roles; the Role condition is enforced
+# at the edge. Anyone without the active-member role falls through to the
+# 302 below.
+[[redirects]]
+  from = "/members/*"
+  to = "/members/:splat"
+  status = 200
+  conditions = {Role = ["active-member"]}
+
+[[redirects]]
+  from = "/members/*"
+  to = "/?login=required"
+  status = 302

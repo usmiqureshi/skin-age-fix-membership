@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Discounted Product of the Month · Skin Age Fix Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  .prod { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .prod-head { background: var(--dark); color: #fff; padding: 34px 38px; }
+  .prod-head .m { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+  .prod-head h2 { color: #fff; font-size: 32px; margin: 8px 0 4px; }
+  .prod-head .brand { font-size: 14px; color: rgba(255,255,255,.7); letter-spacing: 1px; }
+  .prod-body { padding: 38px; }
+  .prod-body .rationale { font-size: 17px; color: var(--mid); line-height: 1.6; margin-bottom: 26px; }
+  .pricing { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 28px; }
+  .pricing .blk .k { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); }
+  .pricing .rrp .v { font-family: var(--serif); font-size: 24px; color: var(--light); text-decoration: line-through; }
+  .pricing .mem .v { font-family: var(--serif); font-size: 44px; color: var(--gold-dark); line-height: 1; }
+  .pricing .save .v { font-family: var(--serif); font-size: 24px; color: #2E8B57; }
+  .gh { font-size: 12px; color: var(--light); margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/members/"><span class="nav-logo">Q</span><span class="nav-name">Skin Age Fix Membership</span></a>
+    <div class="nav-right"><span class="member-badge" data-member-name>Member</span><span class="nav-link" onclick="signOut()">Sign Out</span></div>
+  </div>
+</nav>
+
+<div class="page">
+<section class="bg-cream" style="padding:40px 0 80px">
+  <div class="wrap">
+    <a href="/members/" class="back-dash">← Dashboard</a>
+    <div class="page-head" style="padding-top:24px">
+      <span class="eyebrow">Benefit 05</span>
+      <h1>Discounted Product of the Month</h1>
+      <p class="lead">Each month, one clinically selected cosmeceutical at 20–25% off through GetHarley — chosen to match the season and your protocol.</p>
+    </div>
+
+    <div class="chip-row" id="months" style="margin-top:34px"></div>
+    <div class="prod" id="prod"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/assets/js/members.js"></script>
+<script>
+(function () {
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  // NOTE TO DR USMAN: replace the placeholder GetHarley links each month before the email is sent.
+  var GETHARLEY = 'https://www.getharley.com';
+  var DATA = [
+    { name: 'Brightening Vitamin C Serum', brand: 'Revision Skincare', rrp: 95, mem: 72, save: 23, why: 'A stable vitamin C to brighten and protect — the ideal way to open the year and defend the skin age progress you make through the spring.' },
+    { name: 'Gentle Foaming Cleanser', brand: 'Revision Skincare', rrp: 47, mem: 36, save: 11, why: 'A pH-balanced cleanser that respects the barrier — the foundation every protocol is built on, especially after winter dryness.' },
+    { name: 'AlphaRet Exfoliating Peel Pads', brand: 'SkinBetter Science', rrp: 55, mem: 42, save: 13, why: 'Combined retinoid and AHA pads to accelerate cell renewal as the UV index climbs — perfectly timed to this month\'s protocol update.' },
+    { name: 'Intellishade TruPhysical SPF45', brand: 'Revision Skincare', rrp: 50, mem: 38, save: 12, why: 'A tinted physical SPF that makes daily protection effortless — the non-negotiable step as April UV rises.' },
+    { name: 'Niacinamide Peptides Serum', brand: 'Medik8', rrp: 49, mem: 37, save: 12, why: 'Niacinamide with supporting peptides — the universal active that addresses all six skin age outcomes at once.' },
+    { name: 'Alto Advanced Defense Serum', brand: 'SkinBetter Science', rrp: 120, mem: 90, save: 30, why: 'A comprehensive antioxidant serum for peak-UV months — neutralising the free radicals SPF alone cannot block.' },
+    { name: 'Discoloration Defense', brand: 'SkinCeuticals', rrp: 98, mem: 74, save: 24, why: 'A targeted serum for melanin dysregulation — ideal during the highest-UV stretch of the year to keep pigmentation in check.' },
+    { name: 'Restorative Skin Complex', brand: 'Alastin', rrp: 105, mem: 79, save: 26, why: 'Peptide and antioxidant support to repair the cumulative effects of summer and prime the skin for autumn progression.' },
+    { name: 'DEJ Face Cream', brand: 'Revision Skincare', rrp: 85, mem: 64, save: 21, why: 'A barrier-supporting cream for the transition into cooler months — locking in the gains of summer.' },
+    { name: 'Barrier Repair Ceramide Moisturiser', brand: 'Clinically selected', rrp: 65, mem: 49, save: 16, why: 'Ceramide replenishment as central heating season begins — the fastest-responding outcome on the skin age assessment.' },
+    { name: 'AlphaRet Overnight Cream', brand: 'SkinBetter Science', rrp: 110, mem: 83, save: 27, why: 'A retinoid-AHA overnight cream — the perfect vehicle for autumn retinoid progression while UV is low.' },
+    { name: 'Hydrating Serum', brand: 'Revision Skincare', rrp: 68, mem: 51, save: 17, why: 'Deep hydration to close the year and counter winter dryness — keeping the barrier resilient through the coldest month.' }
+  ];
+
+  var chips = document.getElementById('months');
+  var box = document.getElementById('prod');
+  var current = new Date().getMonth();
+
+  function chipsHtml() {
+    chips.innerHTML = MONTHS.map(function (m, i) {
+      return '<button class="chip' + (i === current ? ' active' : '') + '" data-i="' + i + '">' + m.slice(0, 3) + '</button>';
+    }).join('');
+  }
+  function render(i) {
+    var d = DATA[i];
+    box.innerHTML =
+      '<div class="prod-head"><div class="m">' + MONTHS[i] + ' · Product of the Month</div>' +
+      '<h2>' + d.name + '</h2><div class="brand">' + d.brand + '</div></div>' +
+      '<div class="prod-body">' +
+        '<p class="rationale">' + d.why + '</p>' +
+        '<div class="pricing">' +
+          '<div class="blk rrp"><div class="k">RRP</div><div class="v">£' + d.rrp + '</div></div>' +
+          '<div class="blk mem"><div class="k">Member price</div><div class="v">£' + d.mem + '</div></div>' +
+          '<div class="blk save"><div class="k">You save</div><div class="v">£' + d.save + '</div></div>' +
+        '</div>' +
+        '<a class="btn btn-gold" href="' + GETHARLEY + '" target="_blank" rel="noopener">Buy on GetHarley →</a>' +
+        '<div class="gh">Member pricing applied at checkout via GetHarley. Placeholder link — confirm the live product page before purchasing.</div>' +
+      '</div>';
+  }
+  chips.addEventListener('click', function (e) {
+    if (!e.target.classList.contains('chip')) return;
+    current = +e.target.dataset.i; chipsHtml(); render(current);
+  });
+  chipsHtml(); render(current);
+})();
+</script>
+</body>
+</html>

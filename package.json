@@ -1,0 +1,10 @@
+{
+  "name": "skin-age-fix-membership",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Skin Age Fix Membership portal — Netlify static site + functions for a doctor-led clinical skincare membership.",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "stripe": "^16.12.0"
+  }
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Quarterly Skin Intelligence Report · Skin Age Fix Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .field { display: flex; flex-direction: column; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    font-family: var(--sans); font-size: 15px; padding: 13px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--white);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
+
+  /* report */
+  #report { margin-top: 40px; }
+  .doc { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .doc-head { background: var(--dark); color: var(--white); padding: 36px 40px; }
+  .doc-head .brand { font-family: var(--serif); font-size: 30px; color: var(--gold); }
+  .doc-head .meta { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.7); margin-top: 8px; }
+  .doc-body { padding: 40px; }
+  .doc-age { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 10px 0 30px; }
+  .doc-age .col { text-align: center; }
+  .doc-age .col .n { font-family: var(--serif); font-size: 60px; line-height: 1; }
+  .doc-age .col.new .n { color: var(--gold-dark); }
+  .doc-age .arrow { font-size: 36px; color: var(--gold); }
+  .doc-rating { text-align: center; margin-bottom: 30px; }
+  .doc-rating .lbl { display: inline-block; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 30px; color: #fff; }
+  .assess { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+  .assess h3 { font-size: 24px; margin-bottom: 14px; }
+  .assess .row { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .assess .row:last-child { border-bottom: none; }
+  .assess .row .k { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 4px; }
+  .assess .row .v { font-size: 15px; color: var(--dark); }
+  .rx { border-left: 3px solid var(--gold); background: var(--gold-bg); padding: 22px; border-radius: var(--radius); margin-top: 26px; }
+  .rx .k { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; }
+  .doc-foot { padding: 20px 40px; border-top: 1px solid var(--border); font-size: 11px; color: var(--light); text-align: center; }
+  .print-row { display: flex; gap: 12px; justify-content: center; margin: 26px 0; }
+
+  @media print {
+    body { background: #fff; }
+    .nav, .footer, #formCard, .back-dash, .page-head, .print-row, .eyebrow { display: none !important; }
+    .page { padding-top: 0; }
+    section { padding: 0; }
+    .doc { border: none; }
+    .doc-head { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .doc-rating .lbl, .doc-age .col.new .n, .assess, .rx { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { size: A4; margin: 12mm; }
+  }
+  @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/members/"><span class="nav-logo">Q</span><span class="nav-name">Skin Age Fix Membership</span></a>
+    <div class="nav-right"><span class="member-badge" data-member-name>Member</span><span class="nav-link" onclick="signOut()">Sign Out</span></div>
+  </div>
+</nav>
+
+<div class="page">
+<section class="bg-cream" style="padding:40px 0 80px">
+  <div class="wrap">
+    <a href="/members/" class="back-dash">← Dashboard</a>
+    <div class="page-head" style="padding-top:24px">
+      <span class="eyebrow">Benefit 07</span>
+      <h1>Quarterly Skin Intelligence Report</h1>
+      <p class="lead">Generate a personalised, printable clinical report every 90 days. Fill in your quarter's data and we'll produce a document you can save or print on A4.</p>
+    </div>
+
+    <div id="formCard" class="card" style="max-width:760px;margin:40px auto 0">
+      <form id="reportForm">
+        <div class="form-grid">
+          <div class="field"><label>First name</label><input id="fName" type="text" required /></div>
+          <div class="field">
+            <label>Quarter</label>
+            <select id="fQuarter"><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option></select>
+          </div>
+          <div class="field"><label>Year</label><input id="fYear" type="number" value="2026" /></div>
+          <div class="field"><label>True biological age</label><input id="fTrue" type="number" required /></div>
+          <div class="field"><label>Original skin age</label><input id="fOrig" type="number" required /></div>
+          <div class="field"><label>Current skin age</label><input id="fCur" type="number" required /></div>
+          <div class="field">
+            <label>Primary skin outcome</label>
+            <select id="fOutcome">
+              <option value="DULL">Dull</option>
+              <option value="WRINKLE">Wrinkle / Lines</option>
+              <option value="PIGMENT">Pigmentation</option>
+              <option value="DRY">Dry / Barrier</option>
+              <option value="ACNE">Acne / Congestion</option>
+              <option value="FIRMNESS">Firmness / Sagging</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Routine consistency (1–5)</label>
+            <select id="fConsistency"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>
+          </div>
+          <div class="field full"><label>Top improvement this quarter</label><input id="fImprove" type="text" placeholder="e.g. Brighter, more even tone" /></div>
+          <div class="field full"><label>Main challenge this quarter</label><input id="fChallenge" type="text" placeholder="e.g. Occasional dryness on actives" /></div>
+          <div class="field full"><label>Next quarter clinical focus</label><input id="fFocus" type="text" placeholder="e.g. Progress retinoid to nightly" /></div>
+        </div>
+        <button class="btn btn-gold" type="submit" style="width:100%;margin-top:24px">Generate Report</button>
+      </form>
+    </div>
+
+    <div id="report" class="hidden">
+      <div class="print-row">
+        <button class="btn btn-gold" onclick="window.print()">Print / Download PDF</button>
+        <button class="btn btn-outline" id="editBtn">Edit Details</button>
+      </div>
+      <div class="doc" id="doc"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/assets/js/members.js"></script>
+<script>
+document.addEventListener('saf:member-ready', function (e) {
+  var OUTCOMES = {
+    DULL: { name: 'Dull', driver: "Your skin's cell renewal cycle has slowed, causing dead cells to accumulate on the surface. Cell renewal responds quickly to clinical intervention — most clients see measurable brightness improvement within 30 days.", rx: 'A prescription-grade retinoid to accelerate cell turnover, paired with a weekly AHA exfoliation and stable vitamin C (THD Ascorbate) each morning.' },
+    WRINKLE: { name: 'Wrinkle / Lines', driver: 'Collagen depletion is the primary driver. From your mid-thirties collagen falls 1% per year. Prescription-grade retinoids and peptides stimulate fibroblast activity to rebuild.', rx: 'A retinoid nightly with a multi-peptide serum (Matrixyl 3000 + Argireline) to stimulate collagen and soften expression lines.' },
+    PIGMENT: { name: 'Pigmentation', driver: 'Melanin dysregulation is overproducing pigment. Your prescription addresses the enzymatic process driving overproduction at its source — most clients see measurable improvement within 60 days.', rx: 'Tranexamic acid 3% with niacinamide 10% to regulate melanin, alongside disciplined SPF50 every morning to protect your gains.' },
+    DRY: { name: 'Dry / Barrier', driver: 'Barrier dysfunction is causing chronic moisture loss. Ceramide replenishment produces visible improvement within days — the fastest-responding outcome on this assessment.', rx: 'A ceramide serum (NP + AP + EOP) nightly with multi-weight hyaluronic acid on damp skin, sealed with an occlusive.' },
+    ACNE: { name: 'Acne / Congestion', driver: 'Chronic inflammation is accelerating your skin age. Clinical actives addressing bacteria, sebum, and inflammation simultaneously break the cycle — most clients see significant improvement within 60 days.', rx: 'A BHA to decongest, zinc PCA to regulate sebum and niacinamide 10% to calm inflammation, introduced gradually.' },
+    FIRMNESS: { name: 'Firmness / Sagging', driver: 'Extracellular matrix deterioration beneath the surface. Prescription-grade actives reach the fibroblast and signal structural rebuilding — visible improvement typically by month 2.', rx: 'A retinoid with peptides and growth-factor support to signal structural rebuilding in the dermal matrix.' }
+  };
+  var RATINGS = [
+    { min: 8, label: 'Exceptional', color: '#2E8B57' },
+    { min: 5, label: 'Strong', color: '#5BA86E' },
+    { min: 2, label: 'Measurable', color: '#C9A96E' },
+    { min: 0, label: 'Stable', color: '#7C8DA6' },
+    { min: -99, label: 'Protocol Review', color: '#D08A3E' }
+  ];
+  function rating(closed) { for (var i = 0; i < RATINGS.length; i++) if (closed >= RATINGS[i].min) return RATINGS[i]; return RATINGS[RATINGS.length - 1]; }
+
+  // prefill
+  document.getElementById('fName').value = (e.detail.name || '').split(' ')[0];
+  try {
+    var r = JSON.parse(localStorage.getItem('drq-reassessment-' + e.detail.email));
+    if (r) { document.getElementById('fCur').value = r.newSkinAge; document.getElementById('fTrue').value = r.trueAge; document.getElementById('fOrig').value = r.previousSkinAge; }
+  } catch (x) {}
+
+  var form = document.getElementById('reportForm');
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var d = {
+      name: document.getElementById('fName').value.trim(),
+      quarter: document.getElementById('fQuarter').value,
+      year: document.getElementById('fYear').value,
+      trueAge: +document.getElementById('fTrue').value,
+      orig: +document.getElementById('fOrig').value,
+      cur: +document.getElementById('fCur').value,
+      outcome: document.getElementById('fOutcome').value,
+      consistency: document.getElementById('fConsistency').value,
+      improve: document.getElementById('fImprove').value.trim() || '—',
+      challenge: document.getElementById('fChallenge').value.trim() || '—',
+      focus: document.getElementById('fFocus').value.trim() || '—'
+    };
+    render(d);
+    document.getElementById('formCard').classList.add('hidden');
+    document.getElementById('report').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.getElementById('editBtn').addEventListener('click', function () {
+    document.getElementById('report').classList.add('hidden');
+    document.getElementById('formCard').classList.remove('hidden');
+  });
+
+  function esc(s) { return String(s).replace(/</g, '&lt;'); }
+
+  function render(d) {
+    var out = OUTCOMES[d.outcome];
+    var closed = d.orig - d.cur;
+    var rt = rating(closed);
+    var arrow = d.cur < d.orig ? '↓' : (d.cur > d.orig ? '↑' : '→');
+    var outlook = closed > 0 ? 'You have closed ' + closed + ' year' + (closed === 1 ? '' : 's') + ' of your skin age gap this quarter — strong evidence your protocol is working.'
+      : (closed === 0 ? 'Your skin age held steady this quarter. The focus now is to introduce or progress an active to start closing the gap.'
+      : 'Your skin age rose this quarter. This is a signal to review your protocol with Dr Q before the next cycle.');
+
+    document.getElementById('doc').innerHTML =
+      '<div class="doc-head"><div class="brand">Skin Age Fix Membership</div>' +
+      '<div class="meta">Skin Intelligence Report · ' + esc(d.name) + ' · ' + esc(d.quarter) + ' ' + esc(d.year) + '</div></div>' +
+      '<div class="doc-body">' +
+        '<div class="doc-age">' +
+          '<div class="col"><div class="n">' + d.orig + '</div><div class="l" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--light)">Original skin age</div></div>' +
+          '<div class="arrow">' + arrow + '</div>' +
+          '<div class="col new"><div class="n">' + d.cur + '</div><div class="l" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-dark)">Current skin age</div></div>' +
+        '</div>' +
+        '<div class="doc-rating"><span class="lbl" style="background:' + rt.color + '">' + rt.label + '</span>' +
+          '<p class="muted" style="margin-top:12px">True age ' + d.trueAge + ' · Gap now ' + Math.max(0, d.cur - d.trueAge) + ' years' + (closed > 0 ? ' · ' + closed + ' years closed this quarter' : '') + '</p></div>' +
+        '<div class="assess">' +
+          '<h3>Clinical Assessment</h3>' +
+          '<div class="row"><div class="k">Primary biological driver — ' + out.name + '</div><div class="v">' + out.driver + '</div></div>' +
+          '<div class="row"><div class="k">Progress outlook</div><div class="v">' + outlook + '</div></div>' +
+          '<div class="row"><div class="k">Top improvement this quarter</div><div class="v">' + esc(d.improve) + '</div></div>' +
+          '<div class="row"><div class="k">Main challenge this quarter</div><div class="v">' + esc(d.challenge) + '</div></div>' +
+          '<div class="row"><div class="k">Routine consistency</div><div class="v">' + d.consistency + ' / 5</div></div>' +
+          '<div class="row"><div class="k">Next quarter clinical focus</div><div class="v">' + esc(d.focus) + '</div></div>' +
+        '</div>' +
+        '<div class="rx"><div class="k">Prescription recommendation</div><div class="v" style="font-size:15px">' + out.rx + '</div></div>' +
+      '</div>' +
+      '<div class="doc-foot">Skin Age Fix Membership · Luxe Skin Concierge · Educational guidance only, not a substitute for medical advice.</div>';
+  }
+});
+</script>
+</body>
+</html>

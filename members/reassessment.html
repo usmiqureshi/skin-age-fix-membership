@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Quarterly Skin Age Reassessment · Skin Age Fix Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  .quiz { max-width: 720px; margin: 40px auto 0; }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0; }
+  .stat { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; text-align: center; }
+  .stat .n { font-family: var(--serif); font-size: 44px; line-height: 1; }
+  .stat .l { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); margin-top: 8px; }
+  .progress-bar { height: 4px; background: var(--cream2); border-radius: 4px; overflow: hidden; margin-bottom: 28px; }
+  .progress-bar i { display: block; height: 100%; background: var(--gold); transition: width .3s; }
+  .qtext { font-family: var(--serif); font-size: 28px; margin-bottom: 24px; }
+  .opt { display: block; width: 100%; text-align: left; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 10px; cursor: pointer; font-family: var(--sans); font-size: 15px; transition: all .15s; }
+  .opt:hover { border-color: var(--gold); background: var(--gold-bg); }
+  .qnum { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 12px; }
+  .result-age { display: flex; align-items: center; justify-content: center; gap: 26px; margin: 30px 0; }
+  .result-age .col { text-align: center; }
+  .result-age .col .n { font-family: var(--serif); font-size: 64px; line-height: 1; }
+  .result-age .col.new .n { color: var(--gold-dark); }
+  .result-age .arrow { font-size: 40px; color: var(--gold); }
+  .rating-label { display: inline-block; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 30px; color: #fff; }
+  .clin-msg { background: var(--gold-bg); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 22px; border-radius: var(--radius); font-family: var(--serif); font-size: 19px; line-height: 1.5; margin: 26px 0; }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/members/"><span class="nav-logo">Q</span><span class="nav-name">Skin Age Fix Membership</span></a>
+    <div class="nav-right"><span class="member-badge" data-member-name>Member</span><span class="nav-link" onclick="signOut()">Sign Out</span></div>
+  </div>
+</nav>
+
+<div class="page">
+<section class="bg-cream" style="padding:40px 0 80px">
+  <div class="wrap">
+    <a href="/members/" class="back-dash">← Dashboard</a>
+    <div class="page-head" style="padding-top:24px">
+      <span class="eyebrow">Benefit 03</span>
+      <h1>Quarterly Skin Age Reassessment</h1>
+      <p class="lead">A five-question clinical check-in that recalculates your skin age every 90 days, so you can see the gap closing.</p>
+    </div>
+
+    <div class="quiz">
+      <!-- INTRO -->
+      <div id="intro" class="card hidden">
+        <h3 style="font-family:var(--serif);font-size:26px">Your starting point</h3>
+        <p class="muted">Answer five quick questions about the last 90 days. We'll recalculate your skin age and show how far you've come.</p>
+        <div class="stat-row">
+          <div class="stat"><div class="n" id="introTrue">–</div><div class="l">True Age</div></div>
+          <div class="stat"><div class="n" id="introSkin">–</div><div class="l">Current Skin Age</div></div>
+        </div>
+        <button class="btn btn-gold" id="startBtn" style="width:100%">Begin Reassessment</button>
+        <p class="muted center" id="lastTaken" style="font-size:13px;margin-top:14px"></p>
+      </div>
+
+      <!-- QUESTIONS -->
+      <div id="questions" class="card hidden">
+        <div class="progress-bar"><i id="bar"></i></div>
+        <div class="qnum" id="qnum"></div>
+        <div class="qtext" id="qtext"></div>
+        <div id="opts"></div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results" class="card hidden">
+        <div class="center"><span class="eyebrow">Your updated assessment</span></div>
+        <div class="result-age">
+          <div class="col"><div class="n" id="prevAge">–</div><div class="l" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--light)">Previous</div></div>
+          <div class="arrow" id="arrow">→</div>
+          <div class="col new"><div class="n" id="newAge">–</div><div class="l" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-dark)">New Skin Age</div></div>
+        </div>
+        <div class="center"><span class="rating-label" id="ratingLabel"></span></div>
+        <p class="center muted" id="gapText" style="margin-top:16px"></p>
+        <div class="clin-msg" id="clinMsg"></div>
+        <h4 style="font-family:var(--serif);font-size:20px;margin-bottom:6px">Your next 90 days</h4>
+        <p class="muted" id="nextText"></p>
+        <div class="cta-row" style="margin-top:24px">
+          <button class="btn btn-outline" id="retakeBtn">Retake</button>
+          <a class="btn btn-gold" href="/members/report.html">View Prescription</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/assets/js/members.js"></script>
+<script>
+document.addEventListener('saf:member-ready', function (e) {
+  var KEY = 'drq-reassessment-' + e.detail.email;
+  var DIARY = 'drq-diary-' + e.detail.email;
+
+  var QUESTIONS = [
+    { q: 'Compared to 90 days ago, how does your skin look when you wake up?',
+      a: [['Noticeably brighter', 3], ['Somewhat brighter', 2], ['About the same', 0], ['A little duller', -2], ['Worse than before', -3]] },
+    { q: 'How has your skin texture changed?',
+      a: [['Significantly smoother', 3], ['Slightly smoother', 2], ['No real change', 0], ['Slightly rougher', -2], ['More congested', -3]] },
+    { q: 'How would you describe your primary skin concern now?',
+      a: [['Dramatic improvement', 3], ['Clear improvement', 2], ['Unchanged', 0], ['Slightly worse', -2], ['Got worse', -3]] },
+    { q: 'How consistent have you been with your skincare routine?',
+      a: [['Every day', 3], ['Most days', 2], ['About half the time', 0], ['Occasionally', -2], ['Not following one', -3]] },
+    { q: 'What do you observe comparing photos now vs 90 days ago?',
+      a: [['Visibly younger', 3], ['Some improvement', 2], ['Hard to tell', 0], ['Looks older', -2], ['No photos taken', -1]] }
+  ];
+
+  var RATINGS = [
+    { min: 10, label: 'Exceptional', color: '#2E8B57' },
+    { min: 6, label: 'Strong', color: '#5BA86E' },
+    { min: 2, label: 'Measurable', color: '#C9A96E' },
+    { min: -1, label: 'Stable', color: '#7C8DA6' },
+    { min: -5, label: 'Limited', color: '#D08A3E' },
+    { min: -99, label: 'Protocol Review Needed', color: '#C0392B' }
+  ];
+
+  // resolve previous skin age + true age from prior reassessment or diary
+  var prev = (function () {
+    try { var r = JSON.parse(localStorage.getItem(KEY)); if (r && r.newSkinAge) return { skin: r.newSkinAge, trueAge: r.trueAge }; } catch (x) {}
+    try {
+      var d = JSON.parse(localStorage.getItem(DIARY));
+      if (d) {
+        var keys = Object.keys(d.entries || {}).sort().slice(-7);
+        var cur = d.startSkinAge;
+        if (keys.length) {
+          var avg = 0; keys.forEach(function (k) { var en = d.entries[k]; avg += (en.hydration + en.clarity + en.firmness) / 3; });
+          avg = avg / keys.length;
+          cur = Math.max(d.trueAge, d.startSkinAge - Math.max(0, Math.round((avg - 2.5) * 2.2)));
+        }
+        return { skin: cur, trueAge: d.trueAge };
+      }
+    } catch (x) {}
+    return { skin: 45, trueAge: 40 };
+  })();
+
+  var idx = 0, sum = 0;
+  document.getElementById('intro').classList.remove('hidden');
+  document.getElementById('introTrue').textContent = prev.trueAge;
+  document.getElementById('introSkin').textContent = prev.skin;
+  try { var last = JSON.parse(localStorage.getItem(KEY)); if (last && last.timestamp) document.getElementById('lastTaken').textContent = 'Last taken ' + new Date(last.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (x) {}
+
+  document.getElementById('startBtn').addEventListener('click', start);
+  document.getElementById('retakeBtn').addEventListener('click', function () { document.getElementById('results').classList.add('hidden'); start(); });
+
+  function start() { idx = 0; sum = 0; document.getElementById('intro').classList.add('hidden'); document.getElementById('questions').classList.remove('hidden'); render(); }
+
+  function render() {
+    var item = QUESTIONS[idx];
+    document.getElementById('bar').style.width = ((idx) / QUESTIONS.length * 100) + '%';
+    document.getElementById('qnum').textContent = 'Question ' + (idx + 1) + ' of ' + QUESTIONS.length;
+    document.getElementById('qtext').textContent = item.q;
+    var opts = document.getElementById('opts'); opts.innerHTML = '';
+    item.a.forEach(function (pair) {
+      var b = document.createElement('button'); b.className = 'opt'; b.textContent = pair[0];
+      b.addEventListener('click', function () { sum += pair[1]; idx++; if (idx < QUESTIONS.length) render(); else finish(); });
+      opts.appendChild(b);
+    });
+  }
+
+  function ratingFor(s) { for (var i = 0; i < RATINGS.length; i++) { if (s >= RATINGS[i].min) return RATINGS[i]; } return RATINGS[RATINGS.length - 1]; }
+
+  function clinicalMessage(rating, change) {
+    if (rating.label === 'Exceptional') return 'Outstanding progress. Your skin is responding faster than typical — the biological drivers are reversing well ahead of schedule. This is the trajectory we want.';
+    if (rating.label === 'Strong') return 'Strong, consistent improvement. Your protocol is clearly working and the gap between your skin age and true age is closing steadily.';
+    if (rating.label === 'Measurable') return 'Measurable progress in the right direction. Tightening consistency over the next quarter will accelerate these gains.';
+    if (rating.label === 'Stable') return 'Your skin is holding steady. Stability is a valid result — but to close the gap we need to introduce or progress an active. Ask Dr Q for your next step.';
+    if (rating.label === 'Limited') return 'Limited movement this quarter. This usually points to inconsistency or a protocol that needs adjusting. Let\'s review your routine before the next cycle.';
+    return 'Your results suggest the current approach isn\'t delivering. This is a signal to reassess your protocol with Dr Q — often a single change unlocks progress.';
+  }
+
+  function finish() {
+    var rating = ratingFor(sum);
+    var change = -Math.round(sum / 3); // positive sum reduces skin age
+    var newSkin = Math.max(prev.trueAge, prev.skin + change);
+    var gapBefore = prev.skin - prev.trueAge;
+    var gapAfter = newSkin - prev.trueAge;
+    var closed = gapBefore - gapAfter;
+
+    document.getElementById('questions').classList.add('hidden');
+    var res = document.getElementById('results'); res.classList.remove('hidden');
+    document.getElementById('prevAge').textContent = prev.skin;
+    document.getElementById('newAge').textContent = newSkin;
+    document.getElementById('arrow').textContent = newSkin < prev.skin ? '↓' : (newSkin > prev.skin ? '↑' : '→');
+    var lbl = document.getElementById('ratingLabel'); lbl.textContent = rating.label; lbl.style.background = rating.color;
+    document.getElementById('newAge').style.color = rating.color;
+    document.getElementById('gapText').textContent = closed > 0
+      ? 'You closed ' + closed + ' year' + (closed === 1 ? '' : 's') + ' of your skin age gap this quarter.'
+      : (closed === 0 ? 'Your skin age held steady this quarter.' : 'Your gap widened by ' + Math.abs(closed) + ' year' + (Math.abs(closed) === 1 ? '' : 's') + ' — let\'s correct course.');
+    document.getElementById('clinMsg').textContent = clinicalMessage(rating, change);
+    document.getElementById('nextText').textContent = rating.label === 'Stable' || rating.label === 'Limited' || rating.label === 'Protocol Review Needed'
+      ? 'Focus on daily consistency and book a check-in with Dr Q to refine your actives. Photograph your skin now to create a fresh baseline for the next reassessment.'
+      : 'Maintain your current protocol, progress your retinoid if tolerated, and keep logging in your Skin Diary. Photograph your skin to track the next 90 days objectively.';
+
+    localStorage.setItem(KEY, JSON.stringify({
+      timestamp: Date.now(), trueAge: prev.trueAge, previousSkinAge: prev.skin,
+      newSkinAge: newSkin, score: sum, rating: rating.label, gapClosed: closed
+    }));
+  }
+});
+</script>
+</body>
+</html>

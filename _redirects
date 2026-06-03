@@ -1,0 +1,7 @@
+# Friendly API alias -> Netlify Functions
+/api/*  /.netlify/functions/:splat  200
+
+# Members area: only active members may load the static files.
+# Netlify Identity supplies the role; everyone else is bounced to login.
+/members/*  /members/:splat  200  Role=active-member
+/members/*  /?login=required  302

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Skin Intelligence Newsletter · Skin Age Fix Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 30px 0 28px; }
+  .toolbar input { flex: 1; min-width: 220px; font-family: var(--sans); font-size: 15px; padding: 13px 16px; border: 1px solid var(--border); border-radius: var(--radius); }
+  .toolbar input:focus { outline: none; border-color: var(--gold); }
+  .nl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .nl { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; cursor: pointer; transition: all .2s; position: relative; }
+  .nl:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .nl .wk { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); }
+  .nl .theme { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--light); margin-top: 4px; }
+  .nl h3 { font-size: 21px; margin: 12px 0 8px; line-height: 1.2; }
+  .nl p { font-size: 14px; color: var(--mid); }
+  .nl .badge { position: absolute; top: 16px; right: 16px; background: var(--gold); color: #fff; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 4px 9px; border-radius: 20px; }
+  .nl .soon { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--light); margin-top: 12px; display: inline-block; }
+  /* modal */
+  .overlay { position: fixed; inset: 0; background: rgba(26,26,26,.55); display: none; align-items: flex-start; justify-content: center; z-index: 200; overflow-y: auto; padding: 40px 16px; }
+  .overlay.open { display: flex; }
+  .reader { background: var(--white); max-width: 680px; width: 100%; border-radius: var(--radius); padding: 44px; position: relative; }
+  .reader .close { position: absolute; top: 18px; right: 22px; font-size: 26px; cursor: pointer; color: var(--light); line-height: 1; }
+  .reader .wk { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); }
+  .reader h2 { font-size: 34px; margin: 12px 0 20px; }
+  .reader .content { font-family: var(--serif); font-size: 18px; line-height: 1.6; color: var(--dark); }
+  .reader .content p { margin-bottom: 16px; }
+  @media (max-width: 860px) { .nl-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="/members/"><span class="nav-logo">Q</span><span class="nav-name">Skin Age Fix Membership</span></a>
+    <div class="nav-right"><span class="member-badge" data-member-name>Member</span><span class="nav-link" onclick="signOut()">Sign Out</span></div>
+  </div>
+</nav>
+
+<div class="page">
+<section class="bg-cream" style="padding:40px 0 80px">
+  <div class="wrap">
+    <a href="/members/" class="back-dash">← Dashboard</a>
+    <div class="page-head" style="padding-top:24px">
+      <span class="eyebrow">Benefit 02</span>
+      <h1>Skin Intelligence Newsletter</h1>
+      <p class="lead">Your 52-week clinical education, one focused lesson at a time. Four quarterly themes take you from understanding your skin to advanced skin intelligence.</p>
+    </div>
+
+    <div class="toolbar">
+      <input id="search" type="text" placeholder="Search newsletters by subject or theme…" />
+      <select id="qfilter" class="chip" style="cursor:pointer">
+        <option value="">All quarters</option>
+        <option value="Q1">Q1 · Know Your Skin</option>
+        <option value="Q2">Q2 · Build Your Ritual</option>
+        <option value="Q3">Q3 · Accelerate Your Results</option>
+        <option value="Q4">Q4 · Advanced Skin Intelligence</option>
+      </select>
+    </div>
+
+    <div class="nl-grid" id="grid"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="brand">Skin Age Fix Membership</div>
+    <div class="tag">Luxe Skin Concierge · Clinical results. No filter required.</div>
+    <div class="cr">© 2026 Luxe Skin Concierge. All rights reserved.</div>
+  </div>
+</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="reader">
+    <span class="close" id="close">×</span>
+    <div class="wk" id="rWk"></div>
+    <h2 id="rTitle"></h2>
+    <div class="content" id="rContent"></div>
+  </div>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/assets/js/members.js"></script>
+<script>
+(function () {
+  var CURRENT_WEEK = 22; // week of 2026-06-03
+  var THEMES = {
+    Q1: 'Q1 · Know Your Skin', Q2: 'Q2 · Build Your Ritual',
+    Q3: 'Q3 · Accelerate Your Results', Q4: 'Q4 · Advanced Skin Intelligence'
+  };
+  function quarterOf(w) { return w <= 13 ? 'Q1' : w <= 26 ? 'Q2' : w <= 39 ? 'Q3' : 'Q4'; }
+
+  // Subject lines for all 52 weeks
+  var SUBJECTS = [
+    'What is your skin age?', 'The six biological drivers of skin ageing', 'Cosmetics vs cosmeceuticals: the real difference', 'Why your skin type is a marketing myth',
+    'Reading an ingredients list like a clinician', 'The truth about "anti-ageing"', 'Barrier function: your skin\'s foundation', 'How cell renewal slows with age',
+    'Collagen: the protein that defines your age', 'Melanin and the science of even tone', 'Sebum, congestion and inflammation', 'Why luxury creams underperform',
+    'Building your skin age baseline',
+    'The order of operations: layering actives', 'Cleansing without stripping', 'Choosing your core moisturiser', 'Introducing your first retinoid',
+    'Vitamin C: stability is everything', 'Niacinamide: the universal active', 'Hyaluronic acid done correctly', 'SPF: the non-negotiable step',
+    'Exfoliation: AHAs vs BHAs', 'Building a morning ritual', 'Building an evening ritual', 'Targeting your primary outcome', 'Your 90-day ritual checkpoint',
+    'Progressing your retinoid safely', 'Peptides and collagen stimulation', 'Tranexamic acid for pigmentation', 'Ceramides and barrier repair',
+    'Antioxidants beyond vitamin C', 'Combining actives without irritation', 'When and how to add a second active', 'Reading your skin\'s feedback signals',
+    'Managing purging vs reactions', 'Seasonal adjustments to your protocol', 'Accelerating results without damage', 'Measuring progress objectively', 'Your accelerate-phase review',
+    'Advanced layering strategies', 'Growth factors and the future of skin', 'Understanding the skin microbiome', 'Hormones and skin ageing',
+    'Periorbital and lip skin', 'Neck, chest and hands', 'In-clinic vs at-home: what\'s worth it', 'Maintenance vs intervention',
+    'Troubleshooting plateaus', 'Long-term skin age strategy', 'Sustaining your results for life', 'Your annual skin age review', 'The year ahead: advanced intelligence'
+  ];
+
+  // Full content for the first four newsletters
+  var FULL = {
+    1: ['Most people know their biological age. Very few know their skin age — the number that reveals how old your skin is actually behaving at a cellular level.',
+        'Your skin age is determined by six biological processes: cell renewal rate, collagen production, melanin regulation, barrier function, sebum balance, and structural protein integrity.',
+        'When these processes slow or become dysregulated, your skin ages faster than your body — sometimes 5 to 10 years faster. The good news: with the right clinical prescription, that gap is reversible. Most clients see measurable change within 90 days.'],
+    2: ['There are six biological drivers behind every visible sign of skin ageing. Understand them and you understand exactly what your skin needs.',
+        'Dullness is slowed cell renewal. Lines and wrinkles are collagen depletion — falling roughly 1% per year from your mid-thirties. Pigmentation is melanin dysregulation. Dryness is barrier dysfunction from ceramide depletion. Congestion is inflammation and sebum overproduction. Sagging is deterioration of the extracellular matrix.',
+        'Every effective protocol works by targeting one or more of these drivers directly — not by treating a "skin type".'],
+    3: ['Cosmetics alter appearance only. Cosmeceuticals produce measurable biological change. That single distinction explains why a £340 cream can underperform a £40 one.',
+        'Luxury retail brands — La Mer, Charlotte Tilbury, Estée Lauder — are, with rare exceptions, cosmetic-grade. They feel beautiful and sit on the surface. Cosmeceutical brands such as SkinBetter Science, Revision Skincare, Alastin, SkinCeuticals, Medik8 and AlumierMD deliver actives at concentrations proven to change skin biology.',
+        'When you buy skincare, you are not buying packaging or scent. You are buying active ingredients at therapeutic concentrations. Everything else is marketing.'],
+    4: ['"What\'s your skin type?" is the wrong question. Skin type is a marketing construct designed to sell you into a product line.',
+        'What your skin actually has is conditions: barrier dysfunction, collagen depletion, melanin overproduction, congestion. These change with the seasons, with hormones, and with age — and they require clinical intervention, not a category label.',
+        'Stop shopping by skin type. Start prescribing by biological driver. That shift is the foundation of everything in this membership.']
+  };
+
+  var data = SUBJECTS.map(function (s, i) {
+    var w = i + 1;
+    return { week: w, quarter: quarterOf(w), theme: THEMES[quarterOf(w)], subject: s, full: FULL[w] || null };
+  });
+
+  var grid = document.getElementById('grid');
+  var search = document.getElementById('search');
+  var qfilter = document.getElementById('qfilter');
+
+  function teaser(n) {
+    if (n.full) return n.full[0].slice(0, 120) + '…';
+    return 'Part of the ' + n.theme + ' series. Released week ' + n.week + '.';
+  }
+
+  function render() {
+    var term = search.value.toLowerCase();
+    var q = qfilter.value;
+    grid.innerHTML = data.filter(function (n) {
+      return (!q || n.quarter === q) && (!term || n.subject.toLowerCase().indexOf(term) !== -1 || n.theme.toLowerCase().indexOf(term) !== -1);
+    }).map(function (n) {
+      var locked = !n.full && n.week > CURRENT_WEEK;
+      return '<div class="nl" data-week="' + n.week + '">' +
+        (n.week === CURRENT_WEEK ? '<span class="badge">This Week</span>' : '') +
+        '<div class="wk">Week ' + n.week + '</div>' +
+        '<div class="theme">' + n.theme + '</div>' +
+        '<h3>' + n.subject + '</h3>' +
+        '<p>' + teaser(n) + '</p>' +
+        (n.full ? '<span class="soon" style="color:var(--gold-dark)">Read full →</span>' : (locked ? '<span class="soon">Coming soon</span>' : '<span class="soon" style="color:var(--gold-dark)">Read →</span>')) +
+        '</div>';
+    }).join('') || '<p class="muted">No newsletters match your search.</p>';
+  }
+
+  grid.addEventListener('click', function (e) {
+    var card = e.target.closest('.nl'); if (!card) return;
+    var n = data[+card.dataset.week - 1];
+    document.getElementById('rWk').textContent = 'Week ' + n.week + ' · ' + n.theme;
+    document.getElementById('rTitle').textContent = n.subject;
+    var body = n.full ? n.full.map(function (p) { return '<p>' + p + '</p>'; }).join('')
+      : '<p>This edition is part of the <strong>' + n.theme + '</strong> series.</p><p>' + (n.week > CURRENT_WEEK ? 'It will be released in week ' + n.week + '. Your full archive unlocks as the year progresses.' : 'Full content for this edition is being added to your archive.') + '</p>';
+    document.getElementById('rContent').innerHTML = body;
+    document.getElementById('overlay').classList.add('open');
+  });
+
+  document.getElementById('close').addEventListener('click', function () { document.getElementById('overlay').classList.remove('open'); });
+  document.getElementById('overlay').addEventListener('click', function (e) { if (e.target.id === 'overlay') e.currentTarget.classList.remove('open'); });
+  search.addEventListener('input', render);
+  qfilter.addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>
