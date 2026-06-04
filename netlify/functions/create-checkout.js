@@ -39,6 +39,7 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify({ url: session.url }) };
   } catch (err) {
     console.error('create-checkout error:', err.message);
-    return { statusCode: 500, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Could not start checkout' }) };
+    // TEMPORARY DEBUG: surface the real Stripe error to the client to diagnose setup.
+    return { statusCode: 500, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Could not start checkout', debug: err.message, type: err.type }) };
   }
 };
