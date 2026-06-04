@@ -20,6 +20,8 @@
   .hero .ticks span { margin: 0 10px; }
 
   .join-box { max-width: 440px; margin: 30px auto 0; }
+  .join-names { display: flex; gap: 12px; }
+  .join-names input { flex: 1; }
   .join-box input {
     width: 100%; font-family: var(--sans); font-size: 15px; padding: 16px 18px;
     border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); margin-bottom: 12px;
@@ -79,7 +81,11 @@
     <p class="sub">The clinical membership that closes the gap between your skin age and your real age.</p>
     <div class="price">£9<small> / month</small></div>
     <div class="join-box" id="join">
-      <input type="email" id="joinEmail" placeholder="Enter your email to begin" autocomplete="email" />
+      <div class="join-names">
+        <input type="text" id="joinFirst" placeholder="First name" autocomplete="given-name" />
+        <input type="text" id="joinLast" placeholder="Last name" autocomplete="family-name" />
+      </div>
+      <input type="email" id="joinEmail" placeholder="Email address" autocomplete="email" />
       <button class="btn btn-gold" id="joinBtn">Start My Membership</button>
       <div id="joinMsg"></div>
     </div>
@@ -217,6 +223,8 @@
 
   // --- Join flow ---------------------------------------------------------
   var joinBtn = document.getElementById('joinBtn');
+  var joinFirst = document.getElementById('joinFirst');
+  var joinLast = document.getElementById('joinLast');
   var joinEmail = document.getElementById('joinEmail');
   var joinMsg = document.getElementById('joinMsg');
 
@@ -226,7 +234,14 @@
   }
 
   joinBtn.addEventListener('click', function () {
+    var firstName = (joinFirst.value || '').trim();
+    var lastName = (joinLast.value || '').trim();
     var email = (joinEmail.value || '').trim();
+    if (!firstName || !lastName) {
+      setMsg('Please enter your first and last name.', 'error');
+      (firstName ? joinLast : joinFirst).focus();
+      return;
+    }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       setMsg('Please enter a valid email address.', 'error');
       joinEmail.focus();
@@ -237,7 +252,7 @@
     fetch('/api/create-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify({ email: email, firstName: firstName, lastName: lastName })
     })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (res) {

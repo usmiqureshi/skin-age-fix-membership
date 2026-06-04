@@ -51,31 +51,52 @@ async function findUserByEmail(cfg, email) {
 }
 
 // Ensure the user exists and carries (or loses) the active-member role.
-async function setMembership(cfg, email, active) {
+// `profile.fullName` (optional) is stored so the members area can greet the
+// member by name.
+async function setMembership(cfg, email, active, profile = {}) {
   let user = await findUserByEmail(cfg, email);
 
   if (!user) {
     if (!active) return; // nothing to revoke
-    // Invite-only flow: create the account with the role pre-assigned. GoTrue
-    // emails the member a confirmation/password-set link automatically.
-    await identityFetch(cfg, '/admin/users', {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        confirm: true,
-        app_metadata: { roles: [MEMBER_ROLE] }
-      })
-    });
-    return;
+    // Invite-only onboarding: the invite endpoint creates the account AND emails
+    // the member a "set your password" link (the canonical Netlify Identity
+    // flow). We then assign the role + name below.
+    let invited = null;
+    try {
+      invited = await identityFetch(cfg, '/invite', {
+        method: 'POST',
+        body: JSON.stringify({ email })
+      });
+    } catch (e) {
+      console.error('invite failed, falling back to admin create:', e.message);
+      // Fallback: create the account directly so access still works, then
+      // trigger a password-set (recovery) email.
+      invited = await identityFetch(cfg, '/admin/users', {
+        method: 'POST',
+        body: JSON.stringify({ email, confirm: true, app_metadata: { roles: [MEMBER_ROLE] } })
+      });
+      try {
+        await fetch(`${cfg.url}/recover`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+      } catch (re) { console.error('recover email failed:', re.message); }
+    }
+    user = invited && invited.id ? invited : await findUserByEmail(cfg, email);
+    if (!user) return; // role will be applied on a subsequent event
   }
 
   const roles = new Set((user.app_metadata && user.app_metadata.roles) || []);
   if (active) roles.add(MEMBER_ROLE);
   else roles.delete(MEMBER_ROLE);
 
+  const userMeta = Object.assign({}, user.user_metadata);
+  if (profile.fullName && !userMeta.full_name) userMeta.full_name = profile.fullName;
+
   await identityFetch(cfg, `/admin/users/${user.id}`, {
     method: 'PUT',
-    body: JSON.stringify({ app_metadata: { roles: [...roles] } })
+    body: JSON.stringify({ app_metadata: { roles: [...roles] }, user_metadata: userMeta })
   });
 }
 
@@ -94,6 +115,16 @@ async function emailFromObject(obj) {
     }
   }
   return null;
+}
+
+// Resolve the member's display name from the metadata we set at checkout.
+function nameFromObject(obj) {
+  const m = (obj && obj.metadata) || {};
+  if (m.netlify_full_name) return m.netlify_full_name.trim();
+  const composed = [m.netlify_first_name, m.netlify_last_name].filter(Boolean).join(' ').trim();
+  if (composed) return composed;
+  if (obj && obj.customer_details && obj.customer_details.name) return obj.customer_details.name;
+  return '';
 }
 
 exports.handler = async (event, context) => {
@@ -123,7 +154,7 @@ exports.handler = async (event, context) => {
       case 'checkout.session.completed':
       case 'customer.subscription.created': {
         const email = await emailFromObject(obj);
-        if (email) await setMembership(cfg, email, true);
+        if (email) await setMembership(cfg, email, true, { fullName: nameFromObject(obj) });
         break;
       }
       case 'customer.subscription.deleted':
