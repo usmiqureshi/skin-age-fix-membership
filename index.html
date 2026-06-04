@@ -203,8 +203,19 @@
     }
   }
 
+  // Netlify Identity action links (invite / recovery / confirmation) arrive
+  // with a token in the URL hash. Make sure the widget opens the set-password
+  // form rather than silently landing on the homepage.
+  function hasActionToken() {
+    var h = window.location.hash || '';
+    return /(invite_token|recovery_token|confirmation_token|email_change_token)=/.test(h);
+  }
+
   if (window.netlifyIdentity) {
-    netlifyIdentity.on('init', function (user) { if (user) handleUser(user); });
+    netlifyIdentity.on('init', function (user) {
+      if (user) { handleUser(user); return; }
+      if (hasActionToken()) netlifyIdentity.open();
+    });
     netlifyIdentity.on('login', function (user) { netlifyIdentity.close(); handleUser(user); });
     netlifyIdentity.init();
   }

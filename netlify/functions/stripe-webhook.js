@@ -52,12 +52,13 @@ async function findUserByEmail(cfg, email) {
 
 // Ensure the user exists and carries (or loses) the active-member role.
 // `profile.fullName` (optional) is stored so the members area can greet the
-// member by name.
-async function setMembership(cfg, email, active, profile = {}) {
+// member by name. `allowCreate` gates account creation to a single event type
+// so concurrent Stripe events can't create duplicate accounts.
+async function setMembership(cfg, email, active, profile = {}, allowCreate = false) {
   let user = await findUserByEmail(cfg, email);
 
   if (!user) {
-    if (!active) return; // nothing to revoke
+    if (!active || !allowCreate) return; // only the designated event creates
     // Invite-only onboarding: the invite endpoint creates the account AND emails
     // the member a "set your password" link (the canonical Netlify Identity
     // flow). We then assign the role + name below.
@@ -68,20 +69,31 @@ async function setMembership(cfg, email, active, profile = {}) {
         body: JSON.stringify({ email })
       });
     } catch (e) {
-      console.error('invite failed, falling back to admin create:', e.message);
-      // Fallback: create the account directly so access still works, then
-      // trigger a password-set (recovery) email.
-      invited = await identityFetch(cfg, '/admin/users', {
-        method: 'POST',
-        body: JSON.stringify({ email, confirm: true, app_metadata: { roles: [MEMBER_ROLE] } })
-      });
-      try {
-        await fetch(`${cfg.url}/recover`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-      } catch (re) { console.error('recover email failed:', re.message); }
+      // A concurrent event (or a Stripe retry) may have already created the
+      // account — re-check before assuming a real failure.
+      console.error('invite error, re-checking for existing user:', e.message);
+      invited = await findUserByEmail(cfg, email);
+      if (!invited) {
+        // Genuine failure: create directly so access still works, then email a
+        // password-set (recovery) link.
+        try {
+          invited = await identityFetch(cfg, '/admin/users', {
+            method: 'POST',
+            body: JSON.stringify({ email, confirm: true, app_metadata: { roles: [MEMBER_ROLE] } })
+          });
+          try {
+            await fetch(`${cfg.url}/recover`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email })
+            });
+          } catch (re) { console.error('recover email failed:', re.message); }
+        } catch (ce) {
+          // Created in parallel between our checks — fall through to lookup.
+          console.error('admin create error, re-checking:', ce.message);
+          invited = await findUserByEmail(cfg, email);
+        }
+      }
     }
     user = invited && invited.id ? invited : await findUserByEmail(cfg, email);
     if (!user) return; // role will be applied on a subsequent event
@@ -151,10 +163,17 @@ exports.handler = async (event, context) => {
     const obj = stripeEvent.data.object;
 
     switch (stripeEvent.type) {
-      case 'checkout.session.completed':
-      case 'customer.subscription.created': {
+      case 'checkout.session.completed': {
+        // The single source of truth for onboarding a new member.
         const email = await emailFromObject(obj);
-        if (email) await setMembership(cfg, email, true, { fullName: nameFromObject(obj) });
+        if (email) await setMembership(cfg, email, true, { fullName: nameFromObject(obj) }, true);
+        break;
+      }
+      case 'customer.subscription.created': {
+        // Reinforces the role on an existing member; never creates an account
+        // (checkout.session.completed owns creation) to avoid duplicates.
+        const email = await emailFromObject(obj);
+        if (email) await setMembership(cfg, email, true, { fullName: nameFromObject(obj) }, false);
         break;
       }
       case 'customer.subscription.deleted':
